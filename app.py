@@ -70,7 +70,8 @@ def load_model():
     # Download model
     model_path = hf_hub_download(
         repo_id=MODEL_REPO,
-        filename=MODEL_FILENAME
+        filename=MODEL_FILENAME,
+        token=os.getenv("HF_TOKEN")
     )
 
     model = SwinClassifier(num_classes=len(CANONICAL_CLASSES))
