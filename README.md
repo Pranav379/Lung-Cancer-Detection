@@ -36,11 +36,17 @@ Users can upload a CT scan image and receive real-time predictions with confiden
 
 ---
 
-## ⚙️ Setup & Run Locally
-```bash
-git clone https://github.com/your-username/your-repo.git
-cd your-repo
-pip install -r requirements.txt
-streamlit run app.py
-- Probability breakdown across all classes  
-- Clean and interactive UI built with Streamlit
+## 📦 Model
+The trained model is hosted externally on HuggingFace and is automatically downloaded at runtime using Hugging Face Hub.
+
+---
+
+## 📊 Dataset
+CT scan dataset sourced from: https://www.kaggle.com/datasets/dishantrathi20/ct-scan-images-for-lung-cancer
+
+---
+
+## 📌 Future Work
+- Improve model accuracy with larger datasets
+- Add Grad-CAM visualizations for interpretability
+- Optimize deployment with GPU-backed inference
