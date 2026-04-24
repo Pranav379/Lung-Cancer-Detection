@@ -28,7 +28,8 @@ DISPLAY_NAMES = {
     "squamous.cell.carcinoma": "Squamous Cell Carcinoma",
 }
 
-MODEL_PATH = "model2a_best.pth"   # place this file next to app.py
+MODEL_REPO = "Pranav379/lung_cancer_model"
+MODEL_FILENAME = "model2a_best.pth"
 
 # Model definition
 class SwinClassifier(nn.Module):
@@ -58,15 +59,26 @@ test_transform = transforms.Compose([
 ])
 
 
-# ── Load model (cached so it's only loaded once per session) ─────────────────
+# Load model
 @st.cache_resource
 def load_model():
+    import os
+    from huggingface_hub import hf_hub_download
+
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    # Download model
+    model_path = hf_hub_download(
+        repo_id=MODEL_REPO,
+        filename=MODEL_FILENAME
+    )
+
     model = SwinClassifier(num_classes=len(CANONICAL_CLASSES))
-    state = torch.load(MODEL_PATH, map_location=device)
+    state = torch.load(model_path, map_location=device)
     model.load_state_dict(state)
     model.to(device)
     model.eval()
+
     return model, device
 
 
@@ -79,7 +91,7 @@ def predict(image: Image.Image, model, device):
     return probs.cpu().numpy()
 
 
-# ── UI ────────────────────────────────────────────────────────────────────────
+# Dashboard
 st.title("🫁 Lung Cancer CT Classifier")
 st.markdown(
     "Upload a lung CT scan image and the model will classify it into one of "
@@ -132,6 +144,5 @@ if uploaded_file is not None:
 
 st.divider()
 st.caption(
-    "Model: Swin Transformer | "
-    "Dataset: Kindly taken from: https://www.kaggle.com/datasets/dishantrathi20/ct-scan-images-for-lung-cancer"
+    "Dataset: Lung Cancer CT Scan Images - https://www.kaggle.com/datasets/dishantrathi20/ct-scan-images-for-lung-cancer"
 )
